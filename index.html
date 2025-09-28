@@ -4,9 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZENITH PVT SERVER</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #6366f1;
+            --accent: #818cf8;
+            --win: #10b981;
+            --loss: #ef4444;
+            --warning: #f59e0b;
+            --bg-light: #0f0f23;
+            --bg-lighter: #1a1b2e;
+            --bg-medium: #252641;
+            --text-dark: #f8fafc;
+            --text-medium: #e2e8f0;
+            --text-light: #94a3b8;
+            --glass-bg: rgba(26, 27, 46, 0.9);
+            --glass-border: rgba(79, 70, 229, 0.3);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            --success-gradient: linear-gradient(135deg, var(--win), #059669);
+            --danger-gradient: linear-gradient(135deg, var(--loss), #dc2626);
+            --radius: 16px;
+            --radius-sm: 8px;
+            --glow: 0 0 15px rgba(79, 70, 229, 0.5);
+            --cyber-blue: #00ffff;
+            --cyber-purple: #8844ff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,9 +43,9 @@
         }
 
         body {
-            font-family: 'Orbitron', monospace;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-            color: #e0e0e0;
+            font-family: 'Exo 2', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -24,18 +53,23 @@
             justify-content: center;
             padding: 20px;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 20%);
         }
 
         .container {
             width: 100%;
-            max-width: 800px;
-            background: rgba(10, 10, 20, 0.8);
-            border-radius: 15px;
+            max-width: 1200px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
             padding: 30px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
-            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--glass-border);
             position: relative;
             overflow: hidden;
+            transition: var(--transition);
         }
 
         .container::before {
@@ -50,19 +84,45 @@
         }
 
         h1 {
+            font-family: 'Orbitron', sans-serif;
             font-size: 2.5rem;
             font-weight: 900;
             text-align: center;
             margin-bottom: 30px;
-            color: #00ffff;
+            color: var(--cyber-blue);
             text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
             letter-spacing: 2px;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 3px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
         }
 
         .status-container {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 30px;
             flex-wrap: wrap;
             gap: 20px;
         }
@@ -71,43 +131,81 @@
             flex: 1;
             min-width: 200px;
             background: rgba(20, 20, 40, 0.7);
-            border-radius: 10px;
+            border-radius: var(--radius-sm);
             padding: 20px;
             border: 1px solid rgba(0, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-box:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow);
+        }
+
+        .status-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient);
         }
 
         .status-title {
             font-size: 0.9rem;
-            color: #888;
+            color: var(--text-light);
             margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-weight: 500;
         }
 
         .status-value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #00ff00;
+            color: var(--win);
             text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            font-family: 'Orbitron', sans-serif;
         }
 
         .prediction-container {
             background: rgba(20, 20, 40, 0.7);
-            border-radius: 10px;
+            border-radius: var(--radius-sm);
             padding: 25px;
-            margin-bottom: 30px;
             border: 1px solid rgba(0, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prediction-container:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow);
+        }
+
+        .prediction-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient);
         }
 
         .prediction-title {
             font-size: 1.2rem;
-            color: #00ffff;
+            color: var(--cyber-blue);
             margin-bottom: 15px;
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-weight: 600;
         }
 
         .prediction-content {
@@ -120,44 +218,164 @@
         .prediction-item {
             text-align: center;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             flex: 1;
             min-width: 120px;
             background: rgba(30, 30, 50, 0.5);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prediction-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .prediction-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
         }
 
         .prediction-label {
             font-size: 0.9rem;
-            color: #aaa;
+            color: var(--text-light);
             margin-bottom: 8px;
             text-transform: uppercase;
+            font-weight: 500;
         }
 
         .prediction-value {
             font-size: 1.4rem;
             font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
         }
 
         .color-value {
-            color: #ff4444;
-            text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+            color: var(--loss);
+            text-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
         }
 
         .number-value {
-            color: #ffff00;
-            text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+            color: var(--warning);
+            text-shadow: 0 0 5px rgba(245, 158, 11, 0.5);
         }
 
         .size-value {
-            color: #00ff00;
-            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            color: var(--win);
+            text-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+        }
+
+        .results-container {
+            background: rgba(20, 20, 40, 0.7);
+            border-radius: var(--radius-sm);
+            padding: 25px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: var(--shadow);
+            max-height: 400px;
+            overflow-y: auto;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .results-container:hover {
+            box-shadow: var(--glow);
+        }
+
+        .results-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient);
+        }
+
+        .results-title {
+            font-size: 1.2rem;
+            color: var(--cyber-blue);
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: rgba(30, 30, 50, 0.5);
+            border-radius: var(--radius-sm);
+            border-left: 4px solid rgba(0, 255, 255, 0.5);
+            transition: var(--transition);
+        }
+
+        .result-item:hover {
+            transform: translateX(5px);
+            background: rgba(40, 40, 60, 0.7);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .issue-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .issue {
+            font-weight: 700;
+            color: var(--cyber-blue);
+        }
+
+        .number-box {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            box-shadow: var(--shadow);
+            font-family: 'Orbitron', sans-serif;
+            transition: var(--transition);
+        }
+
+        .number-box:hover {
+            transform: scale(1.1);
+        }
+
+        .color-red {
+            background: var(--danger-gradient);
+            border: 1px solid #ff6666;
+        }
+
+        .color-green {
+            background: var(--success-gradient);
+            border: 1px solid #00ff55;
+        }
+
+        .color-violet {
+            background: linear-gradient(135deg, var(--cyber-purple), #6600cc);
+            border: 1px solid #9966ff;
         }
 
         .last-update {
             text-align: center;
             font-size: 0.8rem;
-            color: #666;
+            color: var(--text-light);
             margin-top: 20px;
+            padding: 10px;
+            background: rgba(20, 20, 40, 0.5);
+            border-radius: var(--radius-sm);
         }
 
         .pulse {
@@ -182,10 +400,10 @@
 
         @keyframes glow {
             from {
-                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #00ffff, 0 0 20px #00ffff;
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--cyber-blue), 0 0 20px var(--cyber-blue);
             }
             to {
-                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #00ffff, 0 0 40px #00ffff;
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--cyber-blue), 0 0 40px var(--cyber-blue);
             }
         }
 
@@ -195,12 +413,31 @@
             height: 20px;
             border: 3px solid rgba(0, 255, 255, 0.3);
             border-radius: 50%;
-            border-top-color: #00ffff;
+            border-top-color: var(--cyber-blue);
             animation: spin 1s ease-in-out infinite;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* Custom scrollbar */
+        .results-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .results-container::-webkit-scrollbar-track {
+            background: rgba(20, 20, 40, 0.5);
+            border-radius: 4px;
+        }
+
+        .results-container::-webkit-scrollbar-thumb {
+            background: var(--gradient);
+            border-radius: 4px;
+        }
+
+        .results-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
         }
 
         @media (max-width: 600px) {
@@ -219,6 +456,10 @@
             .prediction-value {
                 font-size: 1.2rem;
             }
+            
+            .dashboard {
+                gap: 20px;
+            }
         }
     </style>
 </head>
@@ -226,31 +467,42 @@
     <div class="container pulse">
         <h1 class="glow">ZENITH PVT SERVER</h1>
         
-        <div class="status-container">
-            <div class="status-box">
-                <div class="status-title">Current Period</div>
-                <div class="status-value" id="period">20250926100011379</div>
-            </div>
-            <div class="status-box">
-                <div class="status-title">Status</div>
-                <div class="status-value" id="status">Active</div>
-            </div>
-        </div>
-        
-        <div class="prediction-container">
-            <div class="prediction-title"></div>
-            <div class="prediction-content">
-                <div class="prediction-item">
-                    <div class="prediction-label">Color</div>
-                    <div class="prediction-value color-value" id="color">Green</div>
+        <div class="dashboard">
+            <div>
+                <div class="status-container">
+                    <div class="status-box">
+                        <div class="status-title">Current Period</div>
+                        <div class="status-value" id="period">20250926100011379</div>
+                    </div>
+                    <div class="status-box">
+                        <div class="status-title">Status</div>
+                        <div class="status-value" id="status">Active</div>
+                    </div>
                 </div>
-                <div class="prediction-item">
-                    <div class="prediction-label">Number</div>
-                    <div class="prediction-value number-value" id="number">5</div>
+                
+                <div class="prediction-container">
+                    <div class="prediction-title">Next Prediction</div>
+                    <div class="prediction-content">
+                        <div class="prediction-item">
+                            <div class="prediction-label">Color</div>
+                            <div class="prediction-value color-value" id="color">Green</div>
+                        </div>
+                        <div class="prediction-item">
+                            <div class="prediction-label">Number</div>
+                            <div class="prediction-value number-value" id="number">5</div>
+                        </div>
+                        <div class="prediction-item">
+                            <div class="prediction-label">Size</div>
+                            <div class="prediction-value size-value" id="size">BIG</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="prediction-item">
-                    <div class="prediction-label">Size</div>
-                    <div class="prediction-value size-value" id="size">BIG</div>
+            </div>
+            
+            <div class="results-container">
+                <div class="results-title">Recent Results</div>
+                <div id="results-container">
+                    <!-- Results will be populated here -->
                 </div>
             </div>
         </div>
@@ -263,6 +515,7 @@
     <script>
         let lastPeriod = null;
         let lastUpdateTime = new Date();
+        let patternHistory = [];
 
         function updateLastUpdateTime() {
             const now = new Date();
@@ -277,7 +530,45 @@
             }
         }
 
+        function analyzePatterns(history) {
+            if (history.length < 3) return null;
+            
+            // Simple pattern analysis
+            const lastThree = history.slice(-3);
+            
+            // Check for color patterns
+            const colorCount = {
+                'Red': 0,
+                'Green': 0
+            };
+            
+            lastThree.forEach(item => {
+                colorCount[item.color]++;
+            });
+            
+            // If two of the same color in last three, predict the opposite
+            if (colorCount['Red'] >= 2) return { color: 'Green' };
+            if (colorCount['Green'] >= 2) return { color: 'Red' };
+            
+            return null;
+        }
+
         function generatePrediction() {
+            // First try to use pattern analysis
+            const patternPrediction = analyzePatterns(patternHistory);
+            
+            if (patternPrediction) {
+                const number = Math.floor(Math.random() * 10);
+                const size = number >= 5 ? "BIG" : "SMALL";
+                
+                return { 
+                    color: patternPrediction.color, 
+                    number, 
+                    size 
+                };
+            }
+            
+            // If no pattern detected, generate random
             const colors = ['Red', 'Green'];
             const color = colors[Math.floor(Math.random() * colors.length)];
             const number = Math.floor(Math.random() * 10);
@@ -316,6 +607,12 @@
                         document.getElementById("number").textContent = prediction.number;
                         document.getElementById("size").textContent = prediction.size;
                         
+                        // Add to pattern history
+                        patternHistory.push(prediction);
+                        if (patternHistory.length > 10) {
+                            patternHistory.shift();
+                        }
+                        
                         // Update the timestamp
                         lastUpdateTime = new Date();
                         updateLastUpdateTime();
@@ -337,14 +634,59 @@
             }
         }
 
+        function fetchAndDisplayResults() {
+            const container = document.getElementById('results-container');
+            const apiUrl = 'https://harshpredictor.site/api.php?v=' + new Date().getTime();
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(apiResponse => {
+                    const resultsList = apiResponse.data.list;
+                    container.innerHTML = ''; 
+
+                    resultsList.forEach(item => {
+                        const resultDiv = document.createElement('div');
+                        resultDiv.className = 'result-item';
+                        
+                        let numberBoxColorClass = '';
+                        if (item.color.includes('red')) numberBoxColorClass = 'color-red';
+                        if (item.color.includes('green')) numberBoxColorClass = 'color-green';
+                        if (item.color.includes('violet')) numberBoxColorClass = 'color-violet';
+
+                        resultDiv.innerHTML = `
+                            <div class="issue-details">
+                                <div class="issue">Issue: ${item.issueNumber}</div>
+                                <div>Color: ${item.color}</div>
+                            </div>
+                            <div class="number-box ${numberBoxColorClass}">
+                                ${item.number}
+                            </div>
+                        `;
+                        container.appendChild(resultDiv);
+                    });
+
+                    // Update the timestamp
+                    const currentTime = new Date().toLocaleTimeString();
+                    document.getElementById('lastUpdate').textContent = `Last Updated: ${currentTime}`;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById('lastUpdate').textContent = 'Could not connect to the server.';
+                });
+        }
+
         // Update the last update time every minute
         setInterval(updateLastUpdateTime, 60000);
         
         // Check every 5 seconds for period change
         setInterval(checkPeriodAndPredict, 5000);
         
-        // Initial call
+        // Fetch results every 5 seconds
+        setInterval(fetchAndDisplayResults, 5000);
+        
+        // Initial calls
         checkPeriodAndPredict();
+        fetchAndDisplayResults();
     </script>
 </body>
 </html>
